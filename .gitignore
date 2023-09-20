@@ -1,7 +1,10 @@
 .DS_Store
 .png
+
 Icons/*.png
+
 Output/*.png
+
 Pics/*.jpg
 Pics/*.jpeg
 Pics/*.png

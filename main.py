@@ -1,4 +1,5 @@
 import os
+
 try:
     from PIL import Image, ImageDraw, ImageFont
     import exifread
@@ -25,25 +26,29 @@ if not pics:
     raise Exception("No input pics")
 exifs = {}
 
-# extract information which is needed for making watermark
+
 for pic in pics:
+    # extract information which is needed for making watermark
     with open('Pics/' + pic,'rb') as f:
-        exif_information = exifread.process_file(f)
-        exif_needed = {}
-        exif_needed['Model'] = exif_information['Image Make'].printable + " " + exif_information['Image Model'].printable
-        # exif_needed['Time'] = exif_information['EXIF DateTimeOriginal']
-        time_ = exif_information['EXIF DateTimeOriginal'].printable.split()
-        date_ = '.'.join(time_[0].split(":"))
-        exif_needed['Time'] = date_ +' '+  time_[1]
-        exif_needed['FocalLength'] = exif_information['EXIF FocalLength'].printable + "mm"
-        exif_needed['F'] = 'f/' + "{:.1f}".format(eval(exif_information['EXIF FNumber'].printable))
-        exif_needed['ExpTime'] = exif_information['EXIF ExposureTime'].printable
-        exif_needed['ISO'] = "ISO"+exif_information['EXIF ISOSpeedRatings'].printable
-        exif_needed['width'] = int(exif_information['EXIF ExifImageWidth'].printable)
-        exif_needed['height'] = int(exif_information['EXIF ExifImageLength'].printable)
+        try: 
+            exif_information = exifread.process_file(f)
+            exif_needed = {}
+            exif_needed['Model'] = exif_information['Image Make'].printable + " " + exif_information['Image Model'].printable
+            # exif_needed['Time'] = exif_information['EXIF DateTimeOriginal']
+            time_ = exif_information['EXIF DateTimeOriginal'].printable.split()
+            date_ = '.'.join(time_[0].split(":"))
+            exif_needed['Time'] = date_ +' '+  time_[1]
+            exif_needed['FocalLength'] = exif_information['EXIF FocalLength'].printable + "mm"
+            exif_needed['F'] = 'f/' + "{:.1f}".format(eval(exif_information['EXIF FNumber'].printable))
+            exif_needed['ExpTime'] = exif_information['EXIF ExposureTime'].printable
+            exif_needed['ISO'] = "ISO"+exif_information['EXIF ISOSpeedRatings'].printable
+            exif_needed['width'] = int(exif_information['EXIF ExifImageWidth'].printable)
+            exif_needed['height'] = int(exif_information['EXIF ExifImageLength'].printable)
+        except:
+            print("{} exif information insuffcient, failed to add watermark.".format(pic))
+            continue
         
         
-        exif_information[pic] = exif_needed
 
         # pass
         
